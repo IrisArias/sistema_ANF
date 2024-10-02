@@ -1,14 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package principalpackage;
 
-/**
- *
- * @author AP
- */
 public class PlanillaPanel extends javax.swing.JPanel {
 
     /**
@@ -68,6 +60,11 @@ public class PlanillaPanel extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8", "Title 9", "Title 10", "Title 11", "Title 12", "Title 13", "Title 14", "Title 15", "Title 16"
             }
         ));
+        tablePlanilla.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablePlanillaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablePlanilla);
 
         labelN.setText("N°:");
@@ -226,6 +223,17 @@ public class PlanillaPanel extends javax.swing.JPanel {
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void tablePlanillaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePlanillaMouseClicked
+
+
+
+
+
+        
+        
+        
+    }//GEN-LAST:event_tablePlanillaMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
