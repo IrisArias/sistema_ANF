@@ -1,9 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package principalpackage;
+
+import java.awt.BorderLayout;
 
 /**
  *
@@ -11,11 +9,17 @@ package principalpackage;
  */
 public class DashboardFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form DashboardFrame
-     */
+    
     public DashboardFrame() {
         initComponents();
+        txtinfoEmpresa.setEditable(false); // Desactivar la edición
+        txtinfoEmpresa.setLineWrap(true); // Ajustar las líneas al ancho del JTextArea
+        txtinfoEmpresa.setWrapStyleWord(true); // Ajuste de líneas por palabras completas
+
+        // Configurar el JTextArea para que no tenga fondo ni borde visibles
+        txtinfoEmpresa.setOpaque(false); // Hace que el fondo sea transparente
+       // txtinfoEmpresa.setBorder(null);  // Elimina el borde
+        
     }
 
     /**
@@ -27,49 +31,106 @@ public class DashboardFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        panelPantalla = new javax.swing.JPanel();
+        btnInicio = new javax.swing.JButton();
+        panelContenido = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtinfoEmpresa = new javax.swing.JTextArea();
+        btnPlanilla = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SistemaFinanciero");
         setBackground(new java.awt.Color(51, 51, 51));
 
-        jPanel1.setBackground(new java.awt.Color(189, 189, 204));
+        panelPantalla.setBackground(new java.awt.Color(189, 189, 204));
 
-        jButton1.setText("jButton1");
+        btnInicio.setText("INICIO");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(152, Short.MAX_VALUE))
+        txtinfoEmpresa.setEditable(false);
+        txtinfoEmpresa.setBackground(new java.awt.Color(240, 240, 240));
+        txtinfoEmpresa.setColumns(20);
+        txtinfoEmpresa.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
+        txtinfoEmpresa.setRows(5);
+        txtinfoEmpresa.setText("Informacion de la empresa");
+        txtinfoEmpresa.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txtinfoEmpresa.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        txtinfoEmpresa.setFocusable(false);
+        txtinfoEmpresa.setOpaque(false);
+        txtinfoEmpresa.setRequestFocusEnabled(false);
+        jScrollPane1.setViewportView(txtinfoEmpresa);
+
+        javax.swing.GroupLayout panelContenidoLayout = new javax.swing.GroupLayout(panelContenido);
+        panelContenido.setLayout(panelContenidoLayout);
+        panelContenidoLayout.setHorizontalGroup(
+            panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelContenidoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
+                .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(223, Short.MAX_VALUE))
+        panelContenidoLayout.setVerticalGroup(
+            panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelContenidoLayout.createSequentialGroup()
+                .addGap(91, 91, 91)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(16, Short.MAX_VALUE))
+        );
+
+        btnPlanilla.setText("PLANILLA");
+        btnPlanilla.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlanillaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelPantallaLayout = new javax.swing.GroupLayout(panelPantalla);
+        panelPantalla.setLayout(panelPantallaLayout);
+        panelPantallaLayout.setHorizontalGroup(
+            panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPantallaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnPlanilla, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
+                    .addComponent(btnInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelPantallaLayout.setVerticalGroup(
+            panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelPantallaLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(btnInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnPlanilla, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(panelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 117, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(panelPantalla, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelPantalla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnPlanillaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlanillaActionPerformed
+        // TODO add your handling code here:
+        PlanillaPanel p1=new PlanillaPanel();
+        p1.setSize(1080,640);
+        p1.setLocation(0,0);
+        panelContenido.removeAll();
+        panelContenido.add(p1,BorderLayout.CENTER);
+        panelContenido.revalidate();
+        panelContenido.repaint();
+        
+    }//GEN-LAST:event_btnPlanillaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,7 +140,7 @@ public class DashboardFrame extends javax.swing.JFrame {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
+         */    
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -107,7 +168,11 @@ public class DashboardFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton btnInicio;
+    private javax.swing.JButton btnPlanilla;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel panelContenido;
+    private javax.swing.JPanel panelPantalla;
+    private javax.swing.JTextArea txtinfoEmpresa;
     // End of variables declaration//GEN-END:variables
 }
