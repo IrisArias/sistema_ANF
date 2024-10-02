@@ -2,6 +2,8 @@
 package principalpackage;
 
 import java.awt.BorderLayout;
+import java.awt.Toolkit;
+import javax.swing.JFrame;
 
 /**
  *
@@ -12,13 +14,21 @@ public class DashboardFrame extends javax.swing.JFrame {
     
     public DashboardFrame() {
         initComponents();
-        txtinfoEmpresa.setEditable(false); // Desactivar la edición
-        txtinfoEmpresa.setLineWrap(true); // Ajustar las líneas al ancho del JTextArea
-        txtinfoEmpresa.setWrapStyleWord(true); // Ajuste de líneas por palabras completas
-
-        // Configurar el JTextArea para que no tenga fondo ni borde visibles
-        txtinfoEmpresa.setOpaque(false); // Hace que el fondo sea transparente
-       // txtinfoEmpresa.setBorder(null);  // Elimina el borde
+        
+        this.setTitle("Sistema de Analisis Financiero");
+          // Maximizar la ventana al iniciar
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+       
+        //Conexion objetoConexion = new Conexion();
+        //objetoConexion.establecerConexion();
+        InicioPanel p1=new InicioPanel();
+        p1.setSize(1080,640);
+        p1.setLocation(0,0);
+        panelContenido.removeAll();
+        panelContenido.add(p1,BorderLayout.CENTER);
+        panelContenido.revalidate();
+        panelContenido.repaint();
+       
         
     }
 
@@ -34,8 +44,6 @@ public class DashboardFrame extends javax.swing.JFrame {
         panelPantalla = new javax.swing.JPanel();
         btnInicio = new javax.swing.JButton();
         panelContenido = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        txtinfoEmpresa = new javax.swing.JTextArea();
         btnPlanilla = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -45,35 +53,21 @@ public class DashboardFrame extends javax.swing.JFrame {
         panelPantalla.setBackground(new java.awt.Color(189, 189, 204));
 
         btnInicio.setText("INICIO");
-
-        txtinfoEmpresa.setEditable(false);
-        txtinfoEmpresa.setBackground(new java.awt.Color(240, 240, 240));
-        txtinfoEmpresa.setColumns(20);
-        txtinfoEmpresa.setFont(new java.awt.Font("Tahoma", 0, 13)); // NOI18N
-        txtinfoEmpresa.setRows(5);
-        txtinfoEmpresa.setText("Informacion de la empresa");
-        txtinfoEmpresa.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        txtinfoEmpresa.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        txtinfoEmpresa.setFocusable(false);
-        txtinfoEmpresa.setOpaque(false);
-        txtinfoEmpresa.setRequestFocusEnabled(false);
-        jScrollPane1.setViewportView(txtinfoEmpresa);
+        btnInicio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInicioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelContenidoLayout = new javax.swing.GroupLayout(panelContenido);
         panelContenido.setLayout(panelContenidoLayout);
         panelContenidoLayout.setHorizontalGroup(
             panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelContenidoLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 288, Short.MAX_VALUE)
         );
         panelContenidoLayout.setVerticalGroup(
             panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelContenidoLayout.createSequentialGroup()
-                .addGap(91, 91, 91)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(16, Short.MAX_VALUE))
+            .addGap(0, 300, Short.MAX_VALUE)
         );
 
         btnPlanilla.setText("PLANILLA");
@@ -132,6 +126,17 @@ public class DashboardFrame extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnPlanillaActionPerformed
 
+    private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
+        // TODO add your handling code here:
+        InicioPanel p1=new InicioPanel();
+        p1.setSize(1080,640);
+        p1.setLocation(0,0);
+        panelContenido.removeAll();
+        panelContenido.add(p1,BorderLayout.CENTER);
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }//GEN-LAST:event_btnInicioActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -140,7 +145,7 @@ public class DashboardFrame extends javax.swing.JFrame {
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */    
+         */  
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -170,9 +175,7 @@ public class DashboardFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnInicio;
     private javax.swing.JButton btnPlanilla;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelContenido;
     private javax.swing.JPanel panelPantalla;
-    private javax.swing.JTextArea txtinfoEmpresa;
     // End of variables declaration//GEN-END:variables
 }
