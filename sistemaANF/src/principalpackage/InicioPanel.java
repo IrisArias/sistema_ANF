@@ -1,6 +1,19 @@
 
 package principalpackage;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.ComponentOrientation;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import javax.swing.BorderFactory;
+import javax.swing.GroupLayout;
+import javax.swing.ImageIcon;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+
 public class InicioPanel extends javax.swing.JPanel {
 
     /**
@@ -10,10 +23,17 @@ public class InicioPanel extends javax.swing.JPanel {
         initComponents();
         txtinfoEmpresa.setLineWrap(true); // Ajustar las líneas al ancho del JTextArea
         txtinfoEmpresa.setWrapStyleWord(true); // Ajuste de líneas por palabras completas
-
+        
+        
         // Configurar el JTextArea para que no tenga fondo ni borde visibles
         txtinfoEmpresa.setOpaque(false); // Hace que el fondo sea transparente
         txtinfoEmpresa.setBorder(null);  // Elimina el borde
+        
+        // Establecer el layout del panel como GridBagLayout para centrar la imagen
+       txtinfoEmpresa.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+       txtinfoEmpresa.setAlignmentX(txtinfoEmpresa.CENTER_ALIGNMENT);
+       txtinfoEmpresa.setBorder(new EmptyBorder(50, 50, 0, 50));
+   
     }
 
     /**
@@ -28,36 +48,38 @@ public class InicioPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtinfoEmpresa = new javax.swing.JTextArea();
 
+        setBackground(new java.awt.Color(255, 255, 255));
+        setPreferredSize(null);
+
         txtinfoEmpresa.setEditable(false);
-        txtinfoEmpresa.setBackground(new java.awt.Color(240, 240, 240));
+        txtinfoEmpresa.setBackground(java.awt.Color.lightGray);
         txtinfoEmpresa.setColumns(20);
-        txtinfoEmpresa.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        txtinfoEmpresa.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         txtinfoEmpresa.setRows(5);
-        txtinfoEmpresa.setText("Misión: Ofrecer nuestros productos, servicios de reparación y mantenimiento de motocicletas con alta calidad y eficiencia, brindando un servicio confiable y profesional que garantice la satisfacción total de nuestros clientes. \n\nVisión: Convertirnos en la empresa líder en la venta de productos, servicios de reparación y mantenimiento de motocicletas en San Salvador, reconocidos por la excelencia en el servicio y la innovación en nuestro rubro. ");
+        txtinfoEmpresa.setText("SISTEMA DE PLANILLA \n\nTALLER DE MOTOS SUAREZ S.A de C.V.\n\nMisión: Ofrecer nuestros productos, servicios de reparación y mantenimiento de motocicletas con alta calidad y eficiencia, brindando un servicio confiable y profesional que garantice la satisfacción total de nuestros clientes. \n\nVisión: Convertirnos en la empresa líder en la venta de productos, servicios de reparación y mantenimiento de motocicletas en San Salvador, reconocidos por la excelencia en el servicio y la innovación en nuestro rubro. ");
         txtinfoEmpresa.setAutoscrolls(false);
-        txtinfoEmpresa.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        txtinfoEmpresa.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         txtinfoEmpresa.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        txtinfoEmpresa.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtinfoEmpresa.setEnabled(false);
         txtinfoEmpresa.setFocusable(false);
         txtinfoEmpresa.setOpaque(false);
         txtinfoEmpresa.setRequestFocusEnabled(false);
+        txtinfoEmpresa.setVerifyInputWhenFocusTarget(false);
         jScrollPane1.setViewportView(txtinfoEmpresa);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(39, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
+
+        getAccessibleContext().setAccessibleParent(this);
     }// </editor-fold>//GEN-END:initComponents
 
 

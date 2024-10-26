@@ -1,14 +1,56 @@
 
 package principalpackage;
 
+import java.awt.BorderLayout;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+
 public class PlanillaPanel extends javax.swing.JPanel {
 
-    /**
-     * Creates new form PlanillaPanel
-     */
     public PlanillaPanel() {
         initComponents();
+        tablemodelo();
     }
+    
+     private void tablemodelo() {
+        Conexion objetoConexion = new Conexion(); //clase conexion
+        DefaultTableModel modelo = new DefaultTableModel();
+        String sql="";
+        modelo.addColumn("ID");
+        modelo.addColumn("PrimerNombre");
+        modelo.addColumn("Codigo");
+        modelo.addColumn("Cuenta");
+        modelo.addColumn("Concepto");
+        modelo.addColumn("Cargo");
+        modelo.addColumn("Abono");
+        
+        tablePlanilla.setModel(modelo);
+        sql ="select id,Fecha,Codigo,Cuenta,Concepto,Cargo,Abono from transaccion;";
+        String [] datos = new String[7];
+        Statement st;
+        try { 
+            st= objetoConexion.establecerConexion().createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                datos[0]= rs.getString(1);
+                datos[1]= rs.getString(2);
+                datos[2]= rs.getString(3);
+                datos[3]= rs.getString(4);
+                datos[4]= rs.getString(5);
+                datos[5]= rs.getString(6);
+                datos[6]= rs.getString(7);
+                modelo.addRow(datos);   
+            }
+            tablePlanilla.setModel(modelo);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error:"+ e.toString());
+        } 
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -51,13 +93,10 @@ public class PlanillaPanel extends javax.swing.JPanel {
 
         tablePlanilla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4", "Title 5", "Title 6", "Title 7", "Title 8", "Title 9", "Title 10", "Title 11", "Title 12", "Title 13", "Title 14", "Title 15", "Title 16"
+
             }
         ));
         tablePlanilla.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -97,7 +136,7 @@ public class PlanillaPanel extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(23, Short.MAX_VALUE)
+                .addContainerGap(33, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelFechaInicio, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(labelFechafin, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -122,7 +161,7 @@ public class PlanillaPanel extends javax.swing.JPanel {
                                 .addGap(18, 18, 18)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(txtCantidad, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
+                                        .addComponent(txtCantidad)
                                         .addGap(23, 23, 23))
                                     .addGroup(jPanel2Layout.createSequentialGroup()
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -130,7 +169,7 @@ public class PlanillaPanel extends javax.swing.JPanel {
                                             .addComponent(txtTiempo, javax.swing.GroupLayout.Alignment.LEADING))
                                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addGap(0, 55, Short.MAX_VALUE)
+                                .addGap(0, 65, Short.MAX_VALUE)
                                 .addComponent(btnGuardar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnEliminar)
@@ -170,7 +209,7 @@ public class PlanillaPanel extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelFechafin)
                     .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -206,17 +245,11 @@ public class PlanillaPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -225,14 +258,17 @@ public class PlanillaPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void tablePlanillaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePlanillaMouseClicked
-
-
-
-
-
-        
-        
-        
+         if(evt.getClickCount()==1){
+            JTable receptor=(JTable)evt.getSource();
+            txtN.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),0).toString());
+            txtPuesto.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),1).toString());
+            //JCBcuentas.setVisible(false); 
+            txtFechaIngreso.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),3).toString());
+            txtFechaInicio.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),4).toString());
+            txtFechaFin.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),5).toString());
+            txtTiempo.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),6).toString());
+        }
+          
     }//GEN-LAST:event_tablePlanillaMouseClicked
 
 

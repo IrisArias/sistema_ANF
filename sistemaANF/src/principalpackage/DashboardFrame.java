@@ -2,13 +2,16 @@
 package principalpackage;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.Toolkit;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-/**
- *
- * @author AP
- */
 public class DashboardFrame extends javax.swing.JFrame {
 
     
@@ -16,20 +19,36 @@ public class DashboardFrame extends javax.swing.JFrame {
         initComponents();
         
         this.setTitle("Sistema de Analisis Financiero");
-          // Maximizar la ventana al iniciar
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximizar la ventana al iniciar
+        // Cargar el ícono desde el classpath
+        Image icono = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/imagenes/LogoAnf.png"));
+        setIconImage(icono);
+        panelPantalla.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20)); // Padding de 20 píxeles en cada lado
        
         //Conexion objetoConexion = new Conexion();
         //objetoConexion.establecerConexion();
         InicioPanel p1=new InicioPanel();
-        p1.setSize(1080,640);
         p1.setLocation(0,0);
         panelContenido.removeAll();
-        panelContenido.add(p1,BorderLayout.CENTER);
         panelContenido.revalidate();
-        panelContenido.repaint();
-       
+        panelContenido.repaint();  
+        panelContenido.setLayout(new BorderLayout()); // Cambiar el layout a BorderLayout
+        panelContenido.add(p1, BorderLayout.CENTER);  // Agregar el panel al centro
         
+        // Configurar la apariencia del botón
+        btnInicio.setBackground(Color.decode("#1d2d44")); // Código hexadecimal
+        btnInicio.setForeground(Color.WHITE); // Color del texto (blanco)
+        btnInicio.setFont(new Font("Arial", Font.BOLD, 16)); // Fuente y tamaño del texto
+        btnInicio.setBorder(BorderFactory.createLineBorder(Color.decode("#182b31"), 2, true)); // Borde redondeado
+        btnInicio.setBorderPainted(false); // Eliminar borde predeterminado
+     
+         // Configurar la apariencia del botón
+        btnPlanilla.setBackground(Color.decode("#1d2d44")); // Código hexadecimal
+        btnPlanilla.setForeground(Color.WHITE); // Color del texto (blanco)
+        btnPlanilla.setFont(new Font("Arial", Font.BOLD, 16)); // Fuente y tamaño del texto
+        btnPlanilla.setBorder(BorderFactory.createLineBorder(Color.decode("#182b31"), 2, true)); // Borde redondeado
+        btnPlanilla.setBorderPainted(false); // Eliminar borde predeterminado
+  
     }
 
     /**
@@ -50,27 +69,39 @@ public class DashboardFrame extends javax.swing.JFrame {
         setTitle("SistemaFinanciero");
         setBackground(new java.awt.Color(51, 51, 51));
 
-        panelPantalla.setBackground(new java.awt.Color(189, 189, 204));
+        panelPantalla.setBackground(new java.awt.Color(224, 225, 221));
+        panelPantalla.setPreferredSize(null);
 
         btnInicio.setText("INICIO");
+        btnInicio.setAlignmentX(0.5F);
+        btnInicio.setFocusPainted(false);
+        btnInicio.setFocusable(false);
+        btnInicio.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnInicio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnInicioActionPerformed(evt);
             }
         });
 
+        panelContenido.setBackground(java.awt.Color.lightGray);
+        panelContenido.setAlignmentY(0.0F);
+        panelContenido.setPreferredSize(null);
+
         javax.swing.GroupLayout panelContenidoLayout = new javax.swing.GroupLayout(panelContenido);
         panelContenido.setLayout(panelContenidoLayout);
         panelContenidoLayout.setHorizontalGroup(
             panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 288, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         panelContenidoLayout.setVerticalGroup(
             panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 417, Short.MAX_VALUE)
         );
 
         btnPlanilla.setText("PLANILLA");
+        btnPlanilla.setFocusPainted(false);
+        btnPlanilla.setFocusable(false);
+        btnPlanilla.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPlanilla.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlanillaActionPerformed(evt);
@@ -80,24 +111,23 @@ public class DashboardFrame extends javax.swing.JFrame {
         javax.swing.GroupLayout panelPantallaLayout = new javax.swing.GroupLayout(panelPantalla);
         panelPantalla.setLayout(panelPantallaLayout);
         panelPantallaLayout.setHorizontalGroup(
-            panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(panelPantallaLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnPlanilla, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
-                    .addComponent(btnInicio, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(21, 21, 21)
+                .addComponent(btnInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(btnPlanilla, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(171, Short.MAX_VALUE))
+            .addComponent(panelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         panelPantallaLayout.setVerticalGroup(
             panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPantallaLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(btnInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnPlanilla, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(panelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnInicio, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .addComponent(btnPlanilla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -108,7 +138,9 @@ public class DashboardFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelPantalla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(panelPantalla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -117,7 +149,7 @@ public class DashboardFrame extends javax.swing.JFrame {
     private void btnPlanillaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlanillaActionPerformed
         // TODO add your handling code here:
         PlanillaPanel p1=new PlanillaPanel();
-        p1.setSize(1080,640);
+        //p1.setSize(1080,640);
         p1.setLocation(0,0);
         panelContenido.removeAll();
         panelContenido.add(p1,BorderLayout.CENTER);
@@ -129,7 +161,7 @@ public class DashboardFrame extends javax.swing.JFrame {
     private void btnInicioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInicioActionPerformed
         // TODO add your handling code here:
         InicioPanel p1=new InicioPanel();
-        p1.setSize(1080,640);
+       // p1.setSize(1080,640);
         p1.setLocation(0,0);
         panelContenido.removeAll();
         panelContenido.add(p1,BorderLayout.CENTER);
