@@ -1,4 +1,3 @@
-
 package principalpackage;
 
 import java.awt.BorderLayout;
@@ -36,19 +35,33 @@ public class DashboardFrame extends javax.swing.JFrame {
         panelContenido.add(p1, BorderLayout.CENTER);  // Agregar el panel al centro
         
         // Configurar la apariencia del botón
-        btnInicio.setBackground(Color.decode("#1d2d44")); // Código hexadecimal
-        btnInicio.setForeground(Color.WHITE); // Color del texto (blanco)
-        btnInicio.setFont(new Font("Arial", Font.BOLD, 16)); // Fuente y tamaño del texto
-        btnInicio.setBorder(BorderFactory.createLineBorder(Color.decode("#182b31"), 2, true)); // Borde redondeado
+        btnInicio.setBackground(Color.decode("#fde9cc")); // Código hexadecimal
+        btnInicio.setForeground(Color.BLACK); // Color del texto (blanco)
+        btnInicio.setFont(new Font("Arial", Font.BOLD, 14)); // Fuente y tamaño del texto
+        btnInicio.setBorder(BorderFactory.createLineBorder(Color.decode("#fde9cc"), 35, true)); // Borde redondeado
         btnInicio.setBorderPainted(false); // Eliminar borde predeterminado
      
          // Configurar la apariencia del botón
-        btnPlanilla.setBackground(Color.decode("#1d2d44")); // Código hexadecimal
-        btnPlanilla.setForeground(Color.WHITE); // Color del texto (blanco)
-        btnPlanilla.setFont(new Font("Arial", Font.BOLD, 16)); // Fuente y tamaño del texto
-        btnPlanilla.setBorder(BorderFactory.createLineBorder(Color.decode("#182b31"), 2, true)); // Borde redondeado
+        btnPlanilla.setBackground(Color.decode("#fde9cc")); // Código hexadecimal
+        btnPlanilla.setForeground(Color.BLACK); // Color del texto (blanco)
+        btnPlanilla.setFont(new Font("Arial", Font.BOLD, 14)); // Fuente y tamaño del texto
+        btnPlanilla.setBorder(BorderFactory.createLineBorder(Color.decode("#fde9cc"), 35, true)); // Borde redondeado
         btnPlanilla.setBorderPainted(false); // Eliminar borde predeterminado
-  
+        
+         // Configurar la apariencia del botón
+        btnHoras.setBackground(Color.decode("#fde9cc")); // Código hexadecimal
+        btnHoras.setForeground(Color.BLACK); // Color del texto (blanco)
+        btnHoras.setFont(new Font("Arial", Font.BOLD, 14)); // Fuente y tamaño del texto
+        btnHoras.setBorder(BorderFactory.createLineBorder(Color.decode("#fde9cc"), 35, true)); // Borde redondeado
+        btnHoras.setBorderPainted(false); // Eliminar borde predeterminado
+                
+         // Configurar la apariencia del botón
+        btnSalir.setBackground(Color.decode("#8f0b13")); // Código hexadecimal
+        btnSalir.setForeground(Color.decode("#fde9cc")); // Color del texto (blanco)
+        btnSalir.setFont(new Font("Arial", Font.BOLD, 14)); // Fuente y tamaño del texto
+        btnSalir.setBorder(BorderFactory.createLineBorder(Color.decode("#8f0b13"), 35, true)); // Borde redondeado
+        btnSalir.setBorderPainted(false); // Eliminar borde predeterminado
+
     }
 
     /**
@@ -64,13 +77,14 @@ public class DashboardFrame extends javax.swing.JFrame {
         btnInicio = new javax.swing.JButton();
         panelContenido = new javax.swing.JPanel();
         btnPlanilla = new javax.swing.JButton();
+        btnHoras = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SistemaFinanciero");
         setBackground(new java.awt.Color(51, 51, 51));
 
-        panelPantalla.setBackground(new java.awt.Color(224, 225, 221));
-        panelPantalla.setPreferredSize(null);
+        panelPantalla.setBackground(new java.awt.Color(36, 41, 62));
 
         btnInicio.setText("INICIO");
         btnInicio.setAlignmentX(0.5F);
@@ -85,7 +99,6 @@ public class DashboardFrame extends javax.swing.JFrame {
 
         panelContenido.setBackground(java.awt.Color.lightGray);
         panelContenido.setAlignmentY(0.0F);
-        panelContenido.setPreferredSize(null);
 
         javax.swing.GroupLayout panelContenidoLayout = new javax.swing.GroupLayout(panelContenido);
         panelContenido.setLayout(panelContenidoLayout);
@@ -95,7 +108,7 @@ public class DashboardFrame extends javax.swing.JFrame {
         );
         panelContenidoLayout.setVerticalGroup(
             panelContenidoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 417, Short.MAX_VALUE)
+            .addGap(0, 431, Short.MAX_VALUE)
         );
 
         btnPlanilla.setText("PLANILLA");
@@ -108,25 +121,51 @@ public class DashboardFrame extends javax.swing.JFrame {
             }
         });
 
+        btnHoras.setText("HORAS EXTRA");
+        btnHoras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHorasActionPerformed(evt);
+            }
+        });
+
+        btnSalir.setBackground(new java.awt.Color(153, 0, 0));
+        btnSalir.setForeground(new java.awt.Color(255, 255, 255));
+        btnSalir.setText("SALIR");
+        btnSalir.setFocusPainted(false);
+        btnSalir.setFocusable(false);
+        btnSalir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelPantallaLayout = new javax.swing.GroupLayout(panelPantalla);
         panelPantalla.setLayout(panelPantallaLayout);
         panelPantallaLayout.setHorizontalGroup(
             panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(panelPantallaLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addComponent(btnInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnInicio, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnPlanilla, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(171, Short.MAX_VALUE))
+                .addComponent(btnPlanilla, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnHoras, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(67, Short.MAX_VALUE))
             .addComponent(panelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         panelPantallaLayout.setVerticalGroup(
             panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelPantallaLayout.createSequentialGroup()
-                .addGroup(panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnInicio, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
-                    .addComponent(btnPlanilla, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 11, Short.MAX_VALUE)
+                .addGroup(panelPantallaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnInicio)
+                    .addComponent(btnPlanilla)
+                    .addComponent(btnHoras)
+                    .addComponent(btnSalir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
                 .addComponent(panelContenido, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -169,6 +208,22 @@ public class DashboardFrame extends javax.swing.JFrame {
         panelContenido.repaint();
     }//GEN-LAST:event_btnInicioActionPerformed
 
+    private void btnHorasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHorasActionPerformed
+
+        HorasPanel p1=new HorasPanel();
+       // p1.setSize(1080,640);
+        p1.setLocation(0,0);
+        panelContenido.removeAll();
+        panelContenido.add(p1,BorderLayout.CENTER);
+        panelContenido.revalidate();
+        panelContenido.repaint();
+    }//GEN-LAST:event_btnHorasActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        // Cerrar la aplicación
+        System.exit(0);
+    }//GEN-LAST:event_btnSalirActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -205,8 +260,10 @@ public class DashboardFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHoras;
     private javax.swing.JButton btnInicio;
     private javax.swing.JButton btnPlanilla;
+    private javax.swing.JButton btnSalir;
     private javax.swing.JPanel panelContenido;
     private javax.swing.JPanel panelPantalla;
     // End of variables declaration//GEN-END:variables

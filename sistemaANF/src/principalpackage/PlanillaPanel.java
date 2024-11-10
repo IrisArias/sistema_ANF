@@ -1,9 +1,15 @@
-
 package principalpackage;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DecimalFormat;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -13,44 +19,110 @@ public class PlanillaPanel extends javax.swing.JPanel {
     public PlanillaPanel() {
         initComponents();
         tablemodelo();
+        cargarIdsEnComboBox(); // Llamar aquí para cargar los IDs
+        cargarInstituciones(); // Llamar aquí para cargar los IDs
+        
+          // Configurar la apariencia del botón
+        btnCrear.setBackground(Color.decode("#fde9cc")); // Código hexadecimal
+        btnCrear.setPreferredSize(new Dimension(120, 40)); // Ajuste de tamaño
+        btnCrear.setBorder(BorderFactory.createLineBorder(Color.decode("#fde9cc"), 2, true)); // Borde redondeado
+        btnCrear.setBorderPainted(false); // Eliminar borde predeterminado
+           // Configurar la apariencia del botón
+        btnLeer.setBackground(Color.decode("#fde9cc")); // Código hexadecimal
+        btnCrear.setPreferredSize(new Dimension(120, 40)); // Ajuste de tamaño
+        btnLeer.setBorder(BorderFactory.createLineBorder(Color.decode("#fde9cc"), 35, true)); // Borde redondeado
+        btnLeer.setBorderPainted(false); // Eliminar borde predeterminado
+          // Configurar la apariencia del botón
+        btnActualizar.setBackground(Color.decode("#fde9cc")); // Código hexadecimal
+        btnCrear.setPreferredSize(new Dimension(120, 40)); // Ajuste de tamaño
+        btnActualizar.setBorder(BorderFactory.createLineBorder(Color.decode("#fde9cc"), 35, true)); // Borde redondeado
+        btnActualizar.setBorderPainted(false); // Eliminar borde predeterminado
+          // Configurar la apariencia del botón
+        btnBorrar.setBackground(Color.decode("#fde9cc")); // Código hexadecimal
+        btnCrear.setPreferredSize(new Dimension(120, 40)); // Ajuste de tamaño
+        btnBorrar.setBorder(BorderFactory.createLineBorder(Color.decode("#fde9cc"), 35, true)); // Borde redondeado
+        btnBorrar.setBorderPainted(false); // Eliminar borde predeterminado
     }
-    
-     private void tablemodelo() {
+    private void cargarIdsEnComboBox() {
+        Conexion conexion = new Conexion();
+        String sql = "SELECT p.id, i.nombre FROM planillat p INNER JOIN instituciones i ON p.id_institucion = i.id";
+        try (Statement st = conexion.establecerConexion().createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+            // Limpiar los JComboBox antes de cargar los datos
+            jComboBoxID.removeAllItems();
+          //  comboBoxInst.removeAllItems();
+            // Agregar las opciones predeterminadas
+            jComboBoxID.addItem("Seleccionar ID");
+           // comboBoxInst.addItem("Seleccionar Institución");
+
+            while (rs.next()) {
+                // Obtener el ID y el nombre de la institución desde la base de datos
+                int id = rs.getInt("id");
+                // Formatear el ID con ceros a la izquierda
+                String idFormateado = String.format("%03d", id);  // Esto lo convierte en formato 001, 002, etc.
+                // Añadir el ID formateado al JComboBox de IDs
+                jComboBoxID.addItem(idFormateado);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error al cargar los datos: " + e.getMessage());
+        }
+    }
+    private void cargarInstituciones() {
+    Conexion conexion = new Conexion();
+    String sql = "SELECT nombre FROM instituciones";
+
+    try (Statement st = conexion.establecerConexion().createStatement();
+         ResultSet rs = st.executeQuery(sql)) {
+
+        // Limpiar el ComboBox antes de cargar los datos
+        comboBoxInst.removeAllItems();
+        comboBoxInst.addItem("Seleccionar Institución");
+
+        // Cargar los nombres de las instituciones en el ComboBox
+        while (rs.next()) {
+            String nombreInstitucion = rs.getString("nombre");
+            comboBoxInst.addItem(nombreInstitucion);
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "Error al cargar instituciones: " + e.getMessage());
+    }
+}
+
+    private void tablemodelo() {
         Conexion objetoConexion = new Conexion(); //clase conexion
         DefaultTableModel modelo = new DefaultTableModel();
-        String sql="";
-        modelo.addColumn("ID");
-        modelo.addColumn("PrimerNombre");
-        modelo.addColumn("Codigo");
-        modelo.addColumn("Cuenta");
-        modelo.addColumn("Concepto");
-        modelo.addColumn("Cargo");
-        modelo.addColumn("Abono");
-        
+        String[] columnas = {
+            "id", "salario", "pago_adicional",
+            "monto_vacacional", "ingreso_base", "dias",
+            "horas", "dias_vacacion", "aporte_laboral",
+            "aporte_patronal", "total_aporte",
+            "cotizacion_obligatoria_empleador", "total_fondo",
+            "cuenta_garantia_solidaria", "comision_afp",
+            "total_a_pagar","id_institucion"
+        };
+        for (String columna : columnas) {
+            modelo.addColumn(columna);
+        }
         tablePlanilla.setModel(modelo);
-        sql ="select id,Fecha,Codigo,Cuenta,Concepto,Cargo,Abono from transaccion;";
-        String [] datos = new String[7];
+        String sql = "SELECT " + String.join(",", columnas) + " FROM planillat;";
+        String[] datos = new String[columnas.length];
         Statement st;
-        try { 
-            st= objetoConexion.establecerConexion().createStatement();
+        try {
+            st = objetoConexion.establecerConexion().createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
-                datos[0]= rs.getString(1);
-                datos[1]= rs.getString(2);
-                datos[2]= rs.getString(3);
-                datos[3]= rs.getString(4);
-                datos[4]= rs.getString(5);
-                datos[5]= rs.getString(6);
-                datos[6]= rs.getString(7);
-                modelo.addRow(datos);   
+                for (int i = 0; i < columnas.length; i++) {
+                    datos[i] = rs.getString(i + 1);
+                }
+                modelo.addRow(datos);
             }
             tablePlanilla.setModel(modelo);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error:"+ e.toString());
-        } 
-       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            JOptionPane.showMessageDialog(null, "Error:" + e.toString());
+        }
     }
-    
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -74,22 +146,27 @@ public class PlanillaPanel extends javax.swing.JPanel {
         labelTiempo = new javax.swing.JLabel();
         labelSueldo = new javax.swing.JLabel();
         labelCantidade = new javax.swing.JLabel();
-        txtN = new javax.swing.JTextField();
-        txtPuesto = new javax.swing.JTextField();
-        txtFechaIngreso = new javax.swing.JTextField();
-        txtFechaInicio = new javax.swing.JTextField();
-        txtFechaFin = new javax.swing.JTextField();
-        txtTiempo = new javax.swing.JTextField();
-        txtSueldo = new javax.swing.JTextField();
+        txtsalario = new javax.swing.JTextField();
+        txtpagoadicional = new javax.swing.JTextField();
+        txtmontovacacional = new javax.swing.JTextField();
+        txtdias = new javax.swing.JTextField();
+        txthoras = new javax.swing.JTextField();
         txtCantidad = new javax.swing.JTextField();
-        btnGuardar = new javax.swing.JButton();
-        btnEliminar = new javax.swing.JButton();
+        jComboBoxID = new javax.swing.JComboBox<>();
+        comboBoxInst = new javax.swing.JComboBox<>();
+        labelFechafin1 = new javax.swing.JLabel();
+        txtingresobase = new javax.swing.JTextField();
+        btnCrear = new javax.swing.JButton();
+        btnLeer = new javax.swing.JButton();
+        btnActualizar = new javax.swing.JButton();
+        btnBorrar = new javax.swing.JButton();
 
         setAutoscrolls(true);
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel1.setBackground(new java.awt.Color(45, 50, 80));
 
-        txtPlanilla.setText("PLANILLA DE EMPLEADOS");
+        txtPlanilla.setForeground(new java.awt.Color(255, 255, 255));
+        txtPlanilla.setText("PLANILLA UNICA DE COTIZACIONES PREVISIONALES Y DE SEGURIDAD SOCIAL");
 
         tablePlanilla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -106,127 +183,176 @@ public class PlanillaPanel extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tablePlanilla);
 
+        jPanel2.setBackground(new java.awt.Color(66, 71, 105));
+        jPanel2.setLayout(null);
+
+        labelN.setForeground(new java.awt.Color(255, 255, 255));
+        labelN.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         labelN.setText("N°:");
+        jPanel2.add(labelN);
+        labelN.setBounds(20, 20, 40, 14);
 
-        labelPuesto.setText("Puesto:");
+        labelPuesto.setForeground(new java.awt.Color(255, 255, 255));
+        labelPuesto.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelPuesto.setText("institucion:");
+        jPanel2.add(labelPuesto);
+        labelPuesto.setBounds(2, 60, 60, 30);
 
-        labelFechaIngreso.setText("Fecha de ingreso a la empresa:");
+        labelFechaIngreso.setForeground(new java.awt.Color(255, 255, 255));
+        labelFechaIngreso.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelFechaIngreso.setText("salario:");
+        jPanel2.add(labelFechaIngreso);
+        labelFechaIngreso.setBounds(30, 110, 80, 30);
 
-        labelFechaInicio.setText("Fecha de inicio del presupuesto:");
+        labelFechaInicio.setForeground(new java.awt.Color(255, 255, 255));
+        labelFechaInicio.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelFechaInicio.setText("pago adicional:");
+        jPanel2.add(labelFechaInicio);
+        labelFechaInicio.setBounds(10, 154, 100, 30);
 
-        labelFechafin.setText("Fecha de corte del presupuesto:");
+        labelFechafin.setForeground(new java.awt.Color(255, 255, 255));
+        labelFechafin.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelFechafin.setText("monto vacacional:");
+        jPanel2.add(labelFechafin);
+        labelFechafin.setBounds(0, 190, 110, 30);
 
-        labelTiempo.setText("Tiempo en la empresa(años):");
+        labelTiempo.setForeground(new java.awt.Color(255, 255, 255));
+        labelTiempo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelTiempo.setText("dias:");
+        jPanel2.add(labelTiempo);
+        labelTiempo.setBounds(250, 50, 80, 30);
 
-        labelSueldo.setText("Sueldo base mensual:");
+        labelSueldo.setForeground(new java.awt.Color(255, 255, 255));
+        labelSueldo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelSueldo.setText("horas:");
+        jPanel2.add(labelSueldo);
+        labelSueldo.setBounds(250, 90, 80, 30);
 
-        labelCantidade.setText("cantidad de empleados:");
+        labelCantidade.setForeground(new java.awt.Color(255, 255, 255));
+        labelCantidade.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelCantidade.setText("dias vacacion:");
+        jPanel2.add(labelCantidade);
+        labelCantidade.setBounds(230, 130, 100, 30);
 
-        btnGuardar.setText("GUARDAR");
-        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
+        txtsalario.setBackground(new java.awt.Color(103, 111, 157));
+        txtsalario.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel2.add(txtsalario);
+        txtsalario.setBounds(120, 110, 90, 30);
+
+        txtpagoadicional.setBackground(new java.awt.Color(103, 111, 157));
+        txtpagoadicional.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel2.add(txtpagoadicional);
+        txtpagoadicional.setBounds(120, 150, 90, 30);
+
+        txtmontovacacional.setBackground(new java.awt.Color(103, 111, 157));
+        txtmontovacacional.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel2.add(txtmontovacacional);
+        txtmontovacacional.setBounds(120, 190, 90, 30);
+
+        txtdias.setBackground(new java.awt.Color(103, 111, 157));
+        txtdias.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel2.add(txtdias);
+        txtdias.setBounds(340, 50, 90, 30);
+
+        txthoras.setBackground(new java.awt.Color(103, 111, 157));
+        txthoras.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel2.add(txthoras);
+        txthoras.setBounds(340, 90, 90, 30);
+
+        txtCantidad.setBackground(new java.awt.Color(103, 111, 157));
+        txtCantidad.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel2.add(txtCantidad);
+        txtCantidad.setBounds(340, 130, 90, 30);
+
+        jComboBoxID.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBoxID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGuardarActionPerformed(evt);
+                jComboBoxIDActionPerformed(evt);
             }
         });
+        jPanel2.add(jComboBoxID);
+        jComboBoxID.setBounds(70, 10, 140, 40);
 
-        btnEliminar.setText("ELIMINAR");
+        comboBoxInst.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxInst.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxInstActionPerformed(evt);
+            }
+        });
+        jPanel2.add(comboBoxInst);
+        comboBoxInst.setBounds(70, 60, 140, 40);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelFechaInicio, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(labelFechafin, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(labelFechaIngreso, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(labelPuesto, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(labelN, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtFechaInicio, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                            .addComponent(txtFechaIngreso, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtPuesto)
-                            .addComponent(txtN))
-                        .addGap(81, 81, 81)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(labelTiempo)
-                                    .addComponent(labelSueldo)
-                                    .addComponent(labelCantidade))
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(txtCantidad)
-                                        .addGap(23, 23, 23))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(txtSueldo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                                            .addComponent(txtTiempo, javax.swing.GroupLayout.Alignment.LEADING))
-                                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addGap(0, 65, Short.MAX_VALUE)
-                                .addComponent(btnGuardar)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnEliminar)
-                                .addGap(23, 23, 23))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelN)
-                    .addComponent(labelTiempo)
-                    .addComponent(txtN, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtTiempo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelPuesto)
-                    .addComponent(labelSueldo)
-                    .addComponent(txtPuesto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtSueldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelFechaIngreso)
-                    .addComponent(labelCantidade)
-                    .addComponent(txtFechaIngreso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelFechaInicio)
-                    .addComponent(txtFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnGuardar)
-                    .addComponent(btnEliminar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelFechafin)
-                    .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(33, Short.MAX_VALUE))
-        );
+        labelFechafin1.setForeground(new java.awt.Color(255, 255, 255));
+        labelFechafin1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelFechafin1.setText("ingreso base:");
+        jPanel2.add(labelFechafin1);
+        labelFechafin1.setBounds(220, 10, 110, 30);
+
+        txtingresobase.setBackground(new java.awt.Color(103, 111, 157));
+        txtingresobase.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel2.add(txtingresobase);
+        txtingresobase.setBounds(340, 10, 90, 30);
+
+        btnCrear.setBackground(new java.awt.Color(249, 177, 122));
+        btnCrear.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnCrear.setText("AGREGAR");
+        btnCrear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnCrear);
+        btnCrear.setBounds(489, 23, 120, 40);
+
+        btnLeer.setBackground(new java.awt.Color(249, 177, 122));
+        btnLeer.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnLeer.setText("BUSCAR");
+        btnLeer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLeerActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnLeer);
+        btnLeer.setBounds(490, 70, 120, 40);
+
+        btnActualizar.setBackground(new java.awt.Color(249, 177, 122));
+        btnActualizar.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnActualizar.setText("EDITAR");
+        btnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualizarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnActualizar);
+        btnActualizar.setBounds(490, 120, 120, 40);
+
+        btnBorrar.setBackground(new java.awt.Color(249, 177, 122));
+        btnBorrar.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        btnBorrar.setText("ELIMINAR");
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrarActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnBorrar);
+        btnBorrar.setBounds(490, 170, 120, 40);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addComponent(txtPlanilla)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 621, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -234,10 +360,10 @@ public class PlanillaPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(txtPlanilla)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -253,28 +379,322 @@ public class PlanillaPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnGuardarActionPerformed
-
     private void tablePlanillaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePlanillaMouseClicked
-         if(evt.getClickCount()==1){
-            JTable receptor=(JTable)evt.getSource();
-            txtN.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),0).toString());
-            txtPuesto.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),1).toString());
-            //JCBcuentas.setVisible(false); 
-            txtFechaIngreso.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),3).toString());
-            txtFechaInicio.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),4).toString());
-            txtFechaFin.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),5).toString());
-            txtTiempo.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(),6).toString());
-        }
-          
+    if (evt.getClickCount() == 1) { // Verifica si se hizo un solo clic
+        JTable receptor = (JTable) evt.getSource();
+        
+        // Obtener el ID desde la tabla y seleccionarlo en el JComboBox
+        String id = receptor.getModel().getValueAt(receptor.getSelectedRow(), 0).toString();
+        jComboBoxID.setSelectedItem(id); // Selecciona el ID en el JComboBox
+        
+        // Rellenar los otros campos de texto según los valores de la tabla
+        txtsalario.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 1).toString());
+        txtpagoadicional.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 2).toString());
+        txtmontovacacional.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 3).toString());
+        txtingresobase.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 4).toString());
+        txtdias.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 5).toString());
+        txthoras.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 6).toString());
+        txtCantidad.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 7).toString());
+        /*txtaportelaboral.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 8).toString());
+        txtAportePatronal.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 9).toString());
+        txtTotalAporte.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 10).toString());
+        txtCotizacionObligatoriaEmpleador.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 11).toString());
+        txtTotalFondo.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 12).toString());
+        txtCuentaGarantiaSolidaria.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 13).toString());
+        txtComisionAfp.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 14).toString());
+        txtTotalAPagar.setText(receptor.getModel().getValueAt(receptor.getSelectedRow(), 15).toString());
+        */
+        // Establecer el ID de la institución en su respectivo campo de texto (si se necesita mostrarlo)
+        String idInstitucion = receptor.getModel().getValueAt(receptor.getSelectedRow(), 16).toString();
+        comboBoxInst.setSelectedItem(idInstitucion); // Asumir que tienes un JComboBox para las instituciones
+    }          
     }//GEN-LAST:event_tablePlanillaMouseClicked
 
+    private void jComboBoxIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxIDActionPerformed
+
+    private void comboBoxInstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxInstActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxInstActionPerformed
+
+    private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
+        // Obtenemos los valores de los campos del formulario
+        double salario = Double.parseDouble(txtsalario.getText());
+        double pagoAdicional = Double.parseDouble(txtpagoadicional.getText());
+        double montoVacacional = Double.parseDouble(txtmontovacacional.getText());
+        double ingresoBase = Double.parseDouble(txtingresobase.getText());
+
+        int dias = Integer.parseInt(txtdias.getText());
+        int horas = Integer.parseInt(txthoras.getText());
+        int diasVacacion = Integer.parseInt(txtCantidad.getText());
+
+    // Obtener la institución seleccionada
+    String institucion = comboBoxInst.getSelectedItem().toString();
+    int institucionID = 0;
+    if (institucion.equals("AFP CECER")) {
+        institucionID = 1; // ID para AFP CECER
+    } else if (institucion.equals("AFP CONFÍA")) {
+        institucionID = 2; // ID para AFP CONFIA
+    } else {
+        JOptionPane.showMessageDialog(null, "Selecciona una institución válida.");
+        return;
+    }   
+ 
+        double aporteLaboral = Math.round(((ingresoBase > 1000) ? 30 : ingresoBase * 0.03) * 100.0) / 100.0;  // Cálculo de aporte laboral
+        double aportePatronal = Math.round(((ingresoBase > 1000) ? 75 : ingresoBase * 0.075) * 100.0) / 100.0;  // Cálculo de aporte patronal
+        double totalAporte = Math.round((aporteLaboral + aportePatronal) * 100.0) / 100.0;    // Cálculo del total aporte (suma de aporte laboral y aporte patronal)   
+
+        double afpAfiliado = Math.round((ingresoBase * 0.0725) * 100.0) / 100.0; // 7.25% de ingreso base // Cálculo del AFP afiliado (7.25% del ingreso base)
+        double afpEmpleador = Math.round((ingresoBase * 0.0175) * 100.0) / 100.0;  // Cálculo de AFP empleador (1.75% de ingreso base)
+        double totalFondo = Math.round((afpAfiliado + afpEmpleador) * 100.0) / 100.0;  // Suma de los dos AFP para obtener el Total Fondo
+
+        double cuentaSolidaria = Math.round((ingresoBase * 0.06) * 100.0) / 100.0;  // Cálculo de cuenta solidaria (6% de ingreso base)
+        double comisionAfp = Math.round((ingresoBase * 0.01) * 100.0) / 100.0;  // Cálculo de comisión AFP (1% de ingreso base)
+        double totalPagar = Math.round((totalFondo + cuentaSolidaria + comisionAfp) * 100.0) / 100.0;
+
+        // Añadir el nuevo registro directamente a la tabla
+    DefaultTableModel modelo = (DefaultTableModel) tablePlanilla.getModel();
+    modelo.addRow(new Object[] {
+        // Incluye otros valores que deseas mostrar en la tabla
+        ingresoBase,
+        aporteLaboral,
+        aportePatronal,
+        totalAporte,
+        
+        afpAfiliado,
+        afpEmpleador,
+        totalFondo ,
+        
+        cuentaSolidaria,
+        comisionAfp,
+        totalPagar 
+    });
+    
+    // Crear la conexión e insertar los datos
+Conexion conexion = new Conexion();
+String sql = "INSERT INTO planillat (salario, pago_adicional, monto_vacacional, ingreso_base, dias, horas, dias_vacacion, "
+           + "aporte_laboral, aporte_patronal, total_aporte, cotizacion_obligatoria_empleador, total_fondo, "
+           + "cuenta_garantia_solidaria, comision_afp, total_a_pagar, id_institucion) "
+           + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+try (PreparedStatement pst = conexion.establecerConexion().prepareStatement(sql)) {
+    // Establecer los parámetros en el PreparedStatement
+    pst.setDouble(1, salario);
+    pst.setDouble(2, pagoAdicional);
+    pst.setDouble(3, montoVacacional);
+    pst.setDouble(4, ingresoBase);
+    pst.setInt(5, dias);
+    pst.setInt(6, horas);
+    pst.setInt(7, diasVacacion);
+    
+    pst.setDouble(8, aporteLaboral); // Revisa si es aporte laboral
+    pst.setDouble(9, aportePatronal);
+    pst.setDouble(10, totalAporte);
+
+    pst.setDouble(11, afpAfiliado); // Verifica si es cotización obligatoria empleador
+    pst.setDouble(12, totalFondo);
+    
+    pst.setDouble(13, cuentaSolidaria);
+    pst.setDouble(14, comisionAfp);
+    pst.setDouble(15, totalPagar);
+    pst.setInt(16, institucionID); // Suponiendo que 'institucionID' es un entero
+
+    pst.executeUpdate();
+    JOptionPane.showMessageDialog(null, "Registro creado exitosamente.");
+} catch (Exception e) {
+    JOptionPane.showMessageDialog(null, "Error al crear el registro: " + e.getMessage());
+}
+          
+    }//GEN-LAST:event_btnCrearActionPerformed
+
+    private void btnLeerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLeerActionPerformed
+    // Obtener el ID seleccionado del JComboBox
+    String idSeleccionado = jComboBoxID.getSelectedItem().toString();    
+    // Verificar que el ID seleccionado no esté vacío o sea el valor predeterminado
+    if (idSeleccionado.isEmpty() || idSeleccionado.equals("Seleccionar ID")) {
+        JOptionPane.showMessageDialog(null, "Por favor, selecciona un ID.");
+        return;
+    }
+     String query = "SELECT * FROM instituciones WHERE id = ?";  // Consulta para seleccionar los registros del ID especificado    
+    // Crear una instancia de la clase Conexion y obtener la conexión
+    Conexion conexion = new Conexion();
+    try (Connection conn = conexion.establecerConexion(); // Establecer conexión
+         PreparedStatement pst = conn.prepareStatement(query)) {
+        
+        // Establecer el valor del ID en la consulta
+        pst.setString(1, idSeleccionado);
+        // Ejecutar la consulta
+        ResultSet rs = pst.executeQuery();
+        
+        // Crear un DefaultTableModel para cargar los datos en la JTable
+        DefaultTableModel model = (DefaultTableModel) tablePlanilla.getModel(); 
+        model.setRowCount(0);  // Limpiar la tabla antes de agregar los nuevos resultados
+        
+        if (rs.next()) {
+            // Leer los datos de la consulta y agregarlos a la tabla
+            Object[] row = new Object[17];  // Ajusta el tamaño del array según los campos que tienes
+            row[0] = rs.getString("id");
+            row[1] = rs.getDouble("salario");
+            row[2] = rs.getDouble("pago_adicional");
+            row[3] = rs.getDouble("monto_vacacional");
+            row[4] = rs.getDouble("ingreso_base");
+            row[5] = rs.getInt("dias");
+            row[6] = rs.getInt("horas");
+            row[7] = rs.getInt("dias_vacacion");
+            row[8] = rs.getDouble("aporte_laboral");
+            row[9] = rs.getDouble("aporte_patronal");
+            row[10] = rs.getDouble("total_aporte");
+            row[11] = rs.getDouble("cotizacion_obligatoria_empleador");
+            row[12] = rs.getDouble("total_fondo");
+            row[13] = rs.getDouble("cuenta_garantia_solidaria");
+            row[14] = rs.getDouble("comision_afp");
+            row[15] = rs.getDouble("total_a_pagar");
+            row[16] = rs.getString("id_institucion"); // Agregar id_institucion
+            model.addRow(row);  // Agregar la fila a la tabla
+        } else {
+            // Si no se encuentran resultados, mostrar un mensaje
+            JOptionPane.showMessageDialog(null, "No se encontraron datos para el ID seleccionado.");
+        }
+        
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null, "Error al obtener los datos: " + ex.getMessage());
+    }       
+    }//GEN-LAST:event_btnLeerActionPerformed
+
+    private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
+        // Obtener el ID seleccionado del JComboBox
+        String idSeleccionado = jComboBoxID.getSelectedItem().toString();
+        // Verificar que el ID seleccionado no esté vacío o sea el valor predeterminado
+        if (idSeleccionado.isEmpty() || idSeleccionado.equals("Seleccionar ID")) {
+            JOptionPane.showMessageDialog(null, "Por favor, selecciona un ID.");
+            return;
+        }
+        // Obtener los valores que el usuario haya ingresado en los campos de texto
+        double nuevoSalario = Double.parseDouble(txtsalario.getText());
+        double nuevoPagoAdicional = Double.parseDouble(txtpagoadicional.getText());
+        double nuevoMontoVacacional = Double.parseDouble(txtmontovacacional.getText());
+        double nuevoIngresoBase = Double.parseDouble(txtingresobase.getText());
+        int nuevosDias = Integer.parseInt(txtdias.getText());
+        int nuevasHoras = Integer.parseInt(txthoras.getText());
+        int nuevosDiasVacacion = Integer.parseInt(txtCantidad.getText());
+        // Calcular automáticamente los valores que dependen de otros campos
+        double nuevoAporteLaboral = (nuevoIngresoBase > 1000) ? 30 : nuevoIngresoBase * 0.03;  // Aporte laboral
+        double nuevoAportePatronal = (nuevoIngresoBase > 1000) ? 75 : nuevoIngresoBase * 0.075;  // Aporte patronal
+        double nuevoTotalAporte = nuevoAporteLaboral + nuevoAportePatronal;  // Total aporte
+
+        double nuevoAfpAfiliado = nuevoIngresoBase * 0.0725; // AFP afiliado (7.25%)
+        double nuevoAfpEmpleador = nuevoIngresoBase * 0.0175;  // AFP empleador (1.75%)
+        double nuevoTotalFondo = nuevoAfpAfiliado + nuevoAfpEmpleador;  // Total fondo (AFP)
+
+        double nuevaCuentaGarantiaSolidaria = nuevoIngresoBase * 0.06;  // Cuenta garantía solidaria (6%)
+        double nuevaComisionAfp = nuevoIngresoBase * 0.01;  // Comisión AFP (1%)
+        double nuevoTotalAPagar = nuevoTotalFondo + nuevaCuentaGarantiaSolidaria + nuevaComisionAfp;  // Total a pagar
+
+        // Obtener el valor seleccionado de la institución
+        String idInstitucion = comboBoxInst.getSelectedItem().toString();
+        // Consulta para actualizar todos los datos
+        String query = "UPDATE planillat SET "
+                + "salario = ?, pago_adicional = ?, monto_vacacional = ?, ingreso_base = ?, dias = ?, horas = ?, "
+                + "dias_vacacion = ?, aporte_laboral = ?, aporte_patronal = ?, total_aporte = ?, "
+                + "cotizacion_obligatoria_empleador = ?, total_fondo = ?, cuenta_garantia_solidaria = ?, "
+                + "comision_afp = ?, total_a_pagar = ?, id_institucion = ? "
+                + "WHERE id = ?";
+
+        // Crear una instancia de la clase Conexion y obtener la conexión
+        Conexion conexion = new Conexion();
+        try (Connection conn = conexion.establecerConexion(); // Establecer conexión
+                PreparedStatement pst = conn.prepareStatement(query)) {
+
+            // Establecer los valores de los parámetros en la consulta
+            pst.setDouble(1, nuevoSalario);
+            pst.setDouble(2, nuevoPagoAdicional);
+            pst.setDouble(3, nuevoMontoVacacional);
+            pst.setDouble(4, nuevoIngresoBase);
+            pst.setInt(5, nuevosDias);
+            pst.setInt(6, nuevasHoras);
+            pst.setInt(7, nuevosDiasVacacion);
+            pst.setDouble(8, nuevoAporteLaboral);
+            pst.setDouble(9, nuevoAportePatronal);
+            pst.setDouble(10, nuevoTotalAporte);
+            pst.setDouble(11, nuevoAfpAfiliado + nuevoAfpEmpleador); // Cotización obligatoria (AFP total)
+            pst.setDouble(12, nuevoTotalFondo);
+            pst.setDouble(13, nuevaCuentaGarantiaSolidaria);
+            pst.setDouble(14, nuevaComisionAfp);
+            pst.setDouble(15, nuevoTotalAPagar);
+            pst.setString(16, idInstitucion);  // Establecer el valor de la institución
+            pst.setString(17, idSeleccionado);  // Establecer el ID para actualizar el registro correcto
+
+            // Ejecutar la consulta de actualización
+            int filasAfectadas = pst.executeUpdate();
+
+            // Verificar si se actualizó algún registro
+            if (filasAfectadas > 0) {
+                JOptionPane.showMessageDialog(null, "Registro actualizado exitosamente.");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se encontró el registro para actualizar.");
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error al actualizar los datos: " + ex.getMessage());
+        }
+    }//GEN-LAST:event_btnActualizarActionPerformed
+
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+        // Obtener el ID seleccionado desde el ComboBox (por ejemplo, un ComboBox con IDs de trabajadores)
+        String idSeleccionado = (String) jComboBoxID.getSelectedItem(); // Asegúrate de que idComboBox esté correctamente poblado
+        String idSeleccionadoinst = (String) comboBoxInst.getSelectedItem(); // Asegúrate de que idComboBox esté correctamente poblado
+        
+// Verificar que el ID seleccionado no esté vacío
+        if (idSeleccionado.isEmpty() || idSeleccionado.equals("Seleccionar ID")) {
+            JOptionPane.showMessageDialog(null, "Por favor, selecciona un ID.");
+            return;
+        }
+        // Confirmar la eliminación con el usuario
+        int confirmacion = JOptionPane.showConfirmDialog(null,
+            "¿Estás seguro de que deseas eliminar este registro?", "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            // Realizar la consulta SQL para eliminar el trabajador con el ID seleccionado
+            String consulta = "DELETE FROM planillat WHERE id = ?";
+            // Realizar la eliminación
+            Conexion conexion = new Conexion();
+            try (Connection conn = conexion.establecerConexion();
+                PreparedStatement pst = conn.prepareStatement(consulta)) {
+                // Establecer el valor del ID en la consulta
+                pst.setString(1, idSeleccionado);
+                // Ejecutar la consulta
+                int filasAfectadas = pst.executeUpdate();
+                if (filasAfectadas > 0) {
+                    JOptionPane.showMessageDialog(null, "El registro se ha eliminado correctamente.");
+                } else {
+                    JOptionPane.showMessageDialog(null, "No se encontró un registro con ese ID.");
+                }
+
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Error al eliminar el registro: " + ex.getMessage());
+            }
+
+            reiniciarCampos();
+        }
+    }//GEN-LAST:event_btnBorrarActionPerformed
+     private void reiniciarCampos() {
+        // Este método limpia los campos de texto (si es necesario).
+        txtsalario.setText("");
+        txtpagoadicional.setText("");
+        txtmontovacacional.setText("");
+        txtingresobase.setText("");
+        txtdias.setText("");
+        txthoras.setText("");
+        txtCantidad.setText("");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEliminar;
-    private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnActualizar;
+    private javax.swing.JButton btnBorrar;
+    private javax.swing.JButton btnCrear;
+    private javax.swing.JButton btnLeer;
+    private javax.swing.JComboBox<String> comboBoxInst;
+    private javax.swing.JComboBox<String> jComboBoxID;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -282,19 +702,19 @@ public class PlanillaPanel extends javax.swing.JPanel {
     private javax.swing.JLabel labelFechaIngreso;
     private javax.swing.JLabel labelFechaInicio;
     private javax.swing.JLabel labelFechafin;
+    private javax.swing.JLabel labelFechafin1;
     private javax.swing.JLabel labelN;
     private javax.swing.JLabel labelPuesto;
     private javax.swing.JLabel labelSueldo;
     private javax.swing.JLabel labelTiempo;
     private javax.swing.JTable tablePlanilla;
     private javax.swing.JTextField txtCantidad;
-    private javax.swing.JTextField txtFechaFin;
-    private javax.swing.JTextField txtFechaIngreso;
-    private javax.swing.JTextField txtFechaInicio;
-    private javax.swing.JTextField txtN;
     private javax.swing.JLabel txtPlanilla;
-    private javax.swing.JTextField txtPuesto;
-    private javax.swing.JTextField txtSueldo;
-    private javax.swing.JTextField txtTiempo;
+    private javax.swing.JTextField txtdias;
+    private javax.swing.JTextField txthoras;
+    private javax.swing.JTextField txtingresobase;
+    private javax.swing.JTextField txtmontovacacional;
+    private javax.swing.JTextField txtpagoadicional;
+    private javax.swing.JTextField txtsalario;
     // End of variables declaration//GEN-END:variables
 }
