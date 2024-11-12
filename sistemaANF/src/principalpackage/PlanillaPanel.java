@@ -45,22 +45,19 @@ public class PlanillaPanel extends javax.swing.JPanel {
     }
     private void cargarIdsEnComboBox() {
         Conexion conexion = new Conexion();
-        String sql = "SELECT p.id, i.nombre FROM planillat p INNER JOIN instituciones i ON p.id_institucion = i.id";
+        //String sql = "SELECT p.id, i.nombre FROM planillat p INNER JOIN instituciones i ON p.id_institucion = i.id";
+        String sql = "SELECT id FROM planillat";
         try (Statement st = conexion.establecerConexion().createStatement();
                 ResultSet rs = st.executeQuery(sql)) {
             // Limpiar los JComboBox antes de cargar los datos
             jComboBoxID.removeAllItems();
-          //  comboBoxInst.removeAllItems();
-            // Agregar las opciones predeterminadas
             jComboBoxID.addItem("Seleccionar ID");
-           // comboBoxInst.addItem("Seleccionar Institución");
-
+            // comboBoxInst.addItem("Seleccionar Institución");
             while (rs.next()) {
                 // Obtener el ID y el nombre de la institución desde la base de datos
                 int id = rs.getInt("id");
-                // Formatear el ID con ceros a la izquierda
-                String idFormateado = String.format("%03d", id);  // Esto lo convierte en formato 001, 002, etc.
-                // Añadir el ID formateado al JComboBox de IDs
+                String idFormateado = String.format("%03d", id);  // Esto lo convierte en formato 001, 002, etc.       
+                // Añadir el ID formateado al JComboBox
                 jComboBoxID.addItem(idFormateado);
             }
         } catch (Exception e) {
@@ -77,13 +74,11 @@ public class PlanillaPanel extends javax.swing.JPanel {
         // Limpiar el ComboBox antes de cargar los datos
         comboBoxInst.removeAllItems();
         comboBoxInst.addItem("Seleccionar Institución");
-
         // Cargar los nombres de las instituciones en el ComboBox
         while (rs.next()) {
             String nombreInstitucion = rs.getString("nombre");
             comboBoxInst.addItem(nombreInstitucion);
         }
-
     } catch (Exception e) {
         JOptionPane.showMessageDialog(null, "Error al cargar instituciones: " + e.getMessage());
     }
@@ -168,6 +163,8 @@ public class PlanillaPanel extends javax.swing.JPanel {
         txtPlanilla.setForeground(new java.awt.Color(255, 255, 255));
         txtPlanilla.setText("PLANILLA UNICA DE COTIZACIONES PREVISIONALES Y DE SEGURIDAD SOCIAL");
 
+        tablePlanilla.setBackground(new java.awt.Color(103, 111, 157));
+        tablePlanilla.setForeground(new java.awt.Color(255, 255, 255));
         tablePlanilla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -302,7 +299,7 @@ public class PlanillaPanel extends javax.swing.JPanel {
             }
         });
         jPanel2.add(btnCrear);
-        btnCrear.setBounds(489, 23, 120, 40);
+        btnCrear.setBounds(459, 23, 150, 40);
 
         btnLeer.setBackground(new java.awt.Color(249, 177, 122));
         btnLeer.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -313,7 +310,7 @@ public class PlanillaPanel extends javax.swing.JPanel {
             }
         });
         jPanel2.add(btnLeer);
-        btnLeer.setBounds(490, 70, 120, 40);
+        btnLeer.setBounds(460, 70, 150, 40);
 
         btnActualizar.setBackground(new java.awt.Color(249, 177, 122));
         btnActualizar.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -324,7 +321,7 @@ public class PlanillaPanel extends javax.swing.JPanel {
             }
         });
         jPanel2.add(btnActualizar);
-        btnActualizar.setBounds(490, 120, 120, 40);
+        btnActualizar.setBounds(460, 120, 150, 40);
 
         btnBorrar.setBackground(new java.awt.Color(249, 177, 122));
         btnBorrar.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -335,7 +332,7 @@ public class PlanillaPanel extends javax.swing.JPanel {
             }
         });
         jPanel2.add(btnBorrar);
-        btnBorrar.setBounds(490, 170, 120, 40);
+        btnBorrar.setBounds(460, 170, 150, 40);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -516,8 +513,18 @@ try (PreparedStatement pst = conexion.establecerConexion().prepareStatement(sql)
         JOptionPane.showMessageDialog(null, "Por favor, selecciona un ID.");
         return;
     }
-     String query = "SELECT * FROM instituciones WHERE id = ?";  // Consulta para seleccionar los registros del ID especificado    
-    // Crear una instancia de la clase Conexion y obtener la conexión
+   //  String query = "SELECT * FROM instituciones WHERE id = ?";  // Consulta para seleccionar los registros del ID especificado    
+      // Cadena de consulta para leer los datos de la base de datos con el ID seleccionado
+    String query = "SELECT p.id, p.salario, p.pago_adicional, p.monto_vacacional, p.ingreso_base, p.dias, p.horas, "
+                 + "p.dias_vacacion, p.aporte_laboral, p.aporte_patronal, p.total_aporte, p.cotizacion_obligatoria_empleador, "
+                 + "p.total_fondo, p.cuenta_garantia_solidaria, p.comision_afp, p.total_a_pagar, "
+                 + "i.id AS id_institucion, i.nombre AS nombre_institucion "
+                 + "FROM planillat p "
+                 + "INNER JOIN instituciones i ON p.id_institucion = i.id "
+                 + "WHERE p.id = ?";  // Consulta SQL usando el ID
+
+   
+// Crear una instancia de la clase Conexion y obtener la conexión
     Conexion conexion = new Conexion();
     try (Connection conn = conexion.establecerConexion(); // Establecer conexión
          PreparedStatement pst = conn.prepareStatement(query)) {
@@ -561,6 +568,23 @@ try (PreparedStatement pst = conexion.establecerConexion().prepareStatement(sql)
         JOptionPane.showMessageDialog(null, "Error al obtener los datos: " + ex.getMessage());
     }       
     }//GEN-LAST:event_btnLeerActionPerformed
+    private String obtenerIdInstitucion(String nombreInstitucion) {
+    String query = "SELECT id FROM instituciones WHERE nombre = ?";
+    Conexion conexion = new Conexion();
+    try (Connection conn = conexion.establecerConexion();
+         PreparedStatement pst = conn.prepareStatement(query)) {
+        
+        pst.setString(1, nombreInstitucion);
+        ResultSet rs = pst.executeQuery();
+        
+        if (rs.next()) {
+            return rs.getString("id");  // Devolver el ID de la institución
+        }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null, "Error al obtener el ID de la institución: " + ex.getMessage());
+    }
+    return null;  // Retornar null si no se encuentra el ID
+}
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
         // Obtener el ID seleccionado del JComboBox
@@ -591,8 +615,14 @@ try (PreparedStatement pst = conexion.establecerConexion().prepareStatement(sql)
         double nuevaComisionAfp = nuevoIngresoBase * 0.01;  // Comisión AFP (1%)
         double nuevoTotalAPagar = nuevoTotalFondo + nuevaCuentaGarantiaSolidaria + nuevaComisionAfp;  // Total a pagar
 
-        // Obtener el valor seleccionado de la institución
-        String idInstitucion = comboBoxInst.getSelectedItem().toString();
+         // Obtener el valor seleccionado de la institución (nombre) y convertirlo a ID
+    String nombreInstitucion = comboBoxInst.getSelectedItem().toString();
+    String idInstitucion = obtenerIdInstitucion(nombreInstitucion); // Llamada al método que obtiene el ID
+
+    if (idInstitucion == null) {
+        JOptionPane.showMessageDialog(null, "Error: No se encontró el ID de la institución.");
+        return;
+    }
         // Consulta para actualizar todos los datos
         String query = "UPDATE planillat SET "
                 + "salario = ?, pago_adicional = ?, monto_vacacional = ?, ingreso_base = ?, dias = ?, horas = ?, "
@@ -605,7 +635,6 @@ try (PreparedStatement pst = conexion.establecerConexion().prepareStatement(sql)
         Conexion conexion = new Conexion();
         try (Connection conn = conexion.establecerConexion(); // Establecer conexión
                 PreparedStatement pst = conn.prepareStatement(query)) {
-
             // Establecer los valores de los parámetros en la consulta
             pst.setDouble(1, nuevoSalario);
             pst.setDouble(2, nuevoPagoAdicional);
@@ -634,7 +663,6 @@ try (PreparedStatement pst = conexion.establecerConexion().prepareStatement(sql)
             } else {
                 JOptionPane.showMessageDialog(null, "No se encontró el registro para actualizar.");
             }
-
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error al actualizar los datos: " + ex.getMessage());
         }
